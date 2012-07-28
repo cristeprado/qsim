@@ -1,4 +1,4 @@
-simq
+qsim
 ====
 
 simulación equilibrio y cuasiequilibrio
