@@ -1,6 +1,0 @@
-T_MAX,1
-NOMBRE_DATA,"DSp"
-mu,0.5
-lambd,0.5
-iter_max,100
-tol,1e-10
