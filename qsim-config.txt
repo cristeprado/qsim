@@ -1,2 +1,2 @@
-defaultModel,G0s
-defaultData,DSp2
+defaultModel,GqsR
+defaultData,D

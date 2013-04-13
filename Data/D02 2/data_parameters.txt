@@ -1,0 +1,7 @@
+T_MAX,30
+mu,0.5
+lambd,0.5
+iter_max,100
+tol,1e-10
+w,100
+nu,0.99
