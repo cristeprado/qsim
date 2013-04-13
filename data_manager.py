@@ -32,7 +32,7 @@ class DataManager(list):
         if currDataFolderPath!="":
             for lf in fileList:
                 lf[0]=op.normpath(op.join(currDataFolderPath,lf[0]))
-        
+
         #descarga data en un diccionario self.dd
         self.dd=self.unload_data_from_files_to_dict(fileList)
 
@@ -53,7 +53,7 @@ class DataManager(list):
         #la matriz H_h es exógena, acá se inicializa por defecto
         #usando una tasa de crecimiento fija.
         self.init_H_h()
-        
+
         #inicializa la matriz S_vi, cumpliendo las restricciones de regulación por zona y el total agregado de oferta (solución factible).
         self.init_S_vi()
 
@@ -75,79 +75,34 @@ class DataManager(list):
 			dd.update(currFile.get_dict())
 
         return dd
-		
-		   ##########################################
-    # def unload_data_from_dict_to_vars(self,dd):
-        # try:
-            # parameters
-            # self.T_MAX=int(dd.get('T_MAX',[-1])[0])
-            # self.mu=float(dd.get('mu',[-1])[0])
-            # self.lambd=float(dd.get('lambd',[-1])[0])
-            # self.iter_max=int(dd.get('iter_max',[-1])[0])
-            # self.tol=float(dd.get('tol',[-1])[0])
-            # self.nu=float(dd.get('nu',[-1])[0])
-            # self.w=float(dd.get('w',[-1])[0])
-
-
-            datos h
-            # self.h=array(dd.get('h',[-1]))[:,newaxis]
-            # self.H_h_0=array(dd.get('H_h_0',[-1]))[:,newaxis]
-            # self.alpha_h=array(dd.get('alpha_h',[-1]))[:,newaxis]
-            # self.Z_h=array(dd.get('Z_h',[-1]))[:,newaxis]
-            # self.b_h_m1=array(dd.get('b_h_m1',[-1]))[:,newaxis]
-
-            datos vi
-            # self.vi=array(dd.get('vi',[-1]))[newaxis,:]
-            # self.S_vi_0=array(dd.get('S_vi_0',[-1]))[newaxis,:]
-            # self.gamma_vi_0=array(dd.get('gamma_vi_0',[-1]))[newaxis,:]
-            # self.R_vi=array(dd.get('R_vi',[-1]))[newaxis,:]
-
-            datos P_h_vi_m1
-            # self.P_h_vi_m1=array(dd.get('P_h_vi_m1',[-1]))
-
-            subsidios
-            # self.subsid_h_0=array(dd.get("subsid_h_0"))[:,newaxis]
-            # self.subsid_vi_0=array(dd.get("subsid_vi_0"))[newaxis,:]
-
-
-            # self.N_h=self.H_h_0.size
-            # self.N_vi=self.S_vi_0.size
-
-        # except KeyError as e:
-            # print "Warning: Missing data available in files"
-            # print e
-            # sys.exc_clear()
-            # ©pass
-            # sys.exit()
-
-
-    ##########################################
 
     ##########################################
     def unload_data_from_dict_to_vars(self,dd):
         #try:
-            #parameters
-			nameList=['T_MAX','mu','lambd','iter_max','tol','nu','w']
-			parserList=[int,float,float,int,float,float,float]
+        #parameters
+        self.T_MAX=int(dd.get('T_MAX',[-1])[0])
+        self.mu=float(dd.get('mu',[-1])[0])
+        self.lambd=float(dd.get('lambd',[-1])[0])
+        self.iter_max=int(dd.get('iter_max',[-1])[0])
+        self.tol=float(dd.get('tol',[-1])[0])
+        self.nu=float(dd.get('nu',[-1])[0])
+        self.w=float(dd.get('w',[-1])[0])
 
-			for each name in nameList
-				self.__dict__[name]=int(dd.get(name,[-1])[0])
-           
-            #datos h
-			for each name in ['h','H_h_0','alpha_h','Z_h','b_h_m1','subsid_h_0']
-				self.__dict__[name]=array(dd.get(name,[-1]))[:,newaxis]
+        #datos h
+        for name in ['h','H_h_0','alpha_h','Z_h','b_h_m1','subsid_h_0']:
+            self.__dict__[name]=array(dd.get(name,[-1]))[:,newaxis]
 
-            #datos vi
-			for each name in ['vi','S_vi_0','gamma_vi_0','R_vi','subsid_vi_0']
-				self.__dict__[name]=array(dd.get(name,[-1]))[newaxis,:]
-          
-            #datos P_h_vi_m1
-			for each name in ['P_h_vi_m1']
-				self.__dict__[name]=array(dd.get(name,[-1]))
+        #datos vi
+        for name in ['vi','S_vi_0','gamma_vi_0','R_vi','subsid_vi_0']:
+            self.__dict__[name]=array(dd.get(name,[-1]))[newaxis,:]
+
+        #datos P_h_vi_m1
+        for name in ['P_h_vi_m1']:
+            self.__dict__[name]=array(dd.get(name,[-1]))
 
 
-            self.N_h=self.H_h_0.size
-            self.N_vi=self.S_vi_0.size
+        self.N_h=self.H_h_0.size
+        self.N_vi=self.S_vi_0.size
 
         #except KeyError as e:
             #print "Warning: Missing data available in files"
@@ -268,7 +223,7 @@ class DataManager(list):
         result=[]
         for t in range(-2,self.T_MAX):
             result.append(self[t].var_dict[varName])
-   
+
         return result
 
         #rangos t=-1, t=-2 corresponden a inicializaciones anteriores a t=0,

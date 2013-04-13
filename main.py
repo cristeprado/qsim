@@ -63,8 +63,8 @@ def main():
     with open(op.join(datfilesFolderPath,dm.NOMBRE_MODELO+dm.NOMBRE_DATA+".dat"),'w') as fdump:
         pickle.dump(dm,fdump)
 
-    with open((op.join(datfilesFolderPath,"dm.dat"),'w') as fdump:
-    pickle.dump(dm,fdump)
+    with open(op.join(datfilesFolderPath,"dm.dat"),'w') as fdump:
+        pickle.dump(dm,fdump)
 
 
 if __name__=="__main__":
