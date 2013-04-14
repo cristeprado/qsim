@@ -2,6 +2,7 @@ import unittest
 
 from qsim import SimulationStep, Simulation, MatrixReader, \
         ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
+from qsim.models.GqsR import Model as TestModel
 from numpy import array, zeros
 
 
@@ -79,8 +80,7 @@ class SimulationTest(BaseTest):
                'test_data/locations_data.txt').get_data()
         self.probs_init = MatrixReader('test_data/data_P_h_vi_m1.txt').get_data()
 
-        # self.model = TestModel()
-        self.model = None
+        self.model = TestModel(self.params)
         self.sim = Simulation(
                self.params, self.households_data, self.probs_init, self.locations_data, self.model)
 
@@ -108,6 +108,7 @@ class SimulationTest(BaseTest):
     def test_run(self):
         self.sim.run()
 
+        self.assertEquals(xxxxx, self.sim.steps[x].xxxx)
         pass
 
         # qsim = Qsim(params, data, model)
