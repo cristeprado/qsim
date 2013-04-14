@@ -3,7 +3,7 @@ import unittest
 from qsim import SimulationStep, Simulation, MatrixReader, \
         ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
 from qsim.models.GqsR import Model as TestModel
-from numpy import array, zeros
+from numpy import array, zeros, around
 
 
 class BaseTest(unittest.TestCase):
@@ -11,6 +11,10 @@ class BaseTest(unittest.TestCase):
     def assertVectorEquals(self, v1, v2):
         msg = "Vectors are not equal: \n %s \n\n vs \n\n %s " % (v1, v2)
         self.assertTrue((v1 == v2).all(), msg)
+
+    def assertVectorAlmostEqual(self,v1,v2,places=5):
+        msg = "Vectors are not almost equal: \n %s \n\n vs \n\n %s " % (v1, v2)
+        self.assertVectorEquals(around(v1,places),around(v2,places))
 
     def assertIsClass(self, var, a_class):
         self.assertTrue(var.__class__ == a_class)
@@ -27,7 +31,7 @@ class ReaderTests(BaseTest):
         parameterSet = reader.get_data()
 
         self.assertEquals(int, type(parameterSet.T_MAX))
-        self.assertEquals(30, parameterSet.T_MAX)
+        self.assertEquals(2, parameterSet.T_MAX)
         self.assertEquals(0.5, parameterSet.mu)
         self.assertEquals(0.5, parameterSet.lambd)
         self.assertEquals(100, parameterSet.iter_max)
@@ -108,8 +112,13 @@ class SimulationTest(BaseTest):
     def test_run(self):
         self.sim.run()
 
-        self.assertEquals(xxxxx, self.sim.steps[x].xxxx)
-        pass
+        self.assertVectorAlmostEqual(array([1,2]),array([1.01,2.01]),places=1)
+        self.assertVectorAlmostEqual(array([[110],[330],[1100]]), self.sim.steps[1].H_h)
+        #self.assertVectorAlmostEqual(array([[-0.71327954],[-0.2596002 ],[ 0.64432307]]), self.sim.steps[1].b_h)
+        #self.assertVectorAlmostEqual(array([[ 311.63426866, 307.82930307, 307.82930307, 307.82930307, 304.87782213]]), self.sim.steps[1].S_vi)
+
+        #self.assertVectorAlmostEqual(array([[ 0.07438614, 0.07116111, 0.07116111, 0.07116111, 0.06864085],[ 0.21935201, 0.21384719, 0.21384719, 0.21384719, 0.20944571],[ 0.70626185, 0.7149917,  0.7149917,  0.7149917,  0.72191344]]), self.sim.steps[1].P_h_vi)
+
 
         # qsim = Qsim(params, data, model)
         # qsim.run()
