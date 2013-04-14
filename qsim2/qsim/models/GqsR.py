@@ -3,12 +3,12 @@
 
 from numpy import newaxis, log, exp
 
-from model import Model
+from model import Model as BaseModel
 
-class Model(Model):
+class Model(BaseModel):
 
     def __init__(self, params):
-        Model.__init__(self, params)
+        BaseModel.__init__(self, params)
 
     def calc_b_h_vi(self,dm,t):
         return self.params.alpha_h*(self.params.Z_h*dm[t-1].P_h_vi).sum(axis=0)[newaxis,:]
