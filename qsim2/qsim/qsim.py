@@ -53,6 +53,8 @@ class Simulation(object):
         self.steps[-1].P_h_vi = self.probs_init.P_h_vi_m1
         self.steps[0].gamma_vi = self.locations_data.gamma_vi_0
         self.steps[0].S_vi = self.locations_data.S_vi_0
+        self.steps[-1].S_vi = self.locations_data.S_vi_0.copy()
+        self.steps[-2].S_vi = self.locations_data.S_vi_0.copy()
 
         for t in range(-2,self.params.T_MAX):
             factor = ((1 + self.params.pop_growth_rate)**t)

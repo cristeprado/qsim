@@ -38,7 +38,7 @@ class ReaderTests(BaseTest):
         self.assertEquals(2, parameterSet.T_MAX)
         self.assertEquals(0.5, parameterSet.mu)
         self.assertEquals(0.5, parameterSet.lambd)
-        self.assertEquals(100, parameterSet.iter_max)
+        #self.assertEquals(100, parameterSet.iter_max)
         self.assertEquals(1e-10, parameterSet.tol)
         self.assertEquals(0.99, parameterSet.nu)
         self.assertEquals(0.1, parameterSet.pop_growth_rate)
