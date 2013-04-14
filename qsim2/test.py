@@ -79,8 +79,10 @@ class SimulationTest(BaseTest):
                'test_data/locations_data.txt').get_data()
         self.probs_init = MatrixReader('test_data/data_P_h_vi_m1.txt').get_data()
 
+        # self.model = TestModel()
+        self.model = None
         self.sim = Simulation(
-               self.params, self.households_data, self.probs_init, self.locations_data, None)
+               self.params, self.households_data, self.probs_init, self.locations_data, self.model)
 
     def test_data_validate(self):
         aux=self.locations_data.R_vi
@@ -95,18 +97,17 @@ class SimulationTest(BaseTest):
         self.assertIsClass(self.sim.steps[1], SimulationStep)
 
         self.assertVectorEquals(self.households_data.b_h_m1, self.sim.steps[-1].b_h)
-
         self.assertVectorEquals(self.probs_init.P_h_vi_m1,self.sim.steps[-1].P_h_vi)
-
         self.assertVectorEquals(self.locations_data.gamma_vi_0,self.sim.steps[0].gamma_vi)
-
         self.assertVectorEquals(self.locations_data.S_vi_0,self.sim.steps[0].S_vi)
 
         for t in range(-2,self.params.T_MAX):
             self.assertVectorEquals(self.sim.steps[t].H_h,self.households_data.H_h_0*(1.1**t))
 
 
-    def test_qsim(self):
+    def test_run(self):
+        self.sim.run()
+
         pass
 
         # qsim = Qsim(params, data, model)
