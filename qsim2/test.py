@@ -35,8 +35,21 @@ class QSimTest(unittest.TestCase):
         data_set = reader.get_data()
 
         self.assertVectorEquals(array([0,1,2]), array([0,1,2]))
-        self.assertVectorEquals(array([[0,1,2]]), data_set.var1)
-        self.assertVectorEquals(array([[1,0,2]]), data_set.var2)
+        self.assertVectorEquals(array([[0],[1],[2]]), data_set.var1)
+        self.assertVectorEquals(array([[1],[0],[2]]), data_set.var2)
+
+    def test_read_horizontal_vector(self):
+        """A horizontal vector file can be read and loaded into a
+        DataSet
+
+        """
+
+        reader = qsim.HorizontalVectorReader('test_data/horizontal.txt')
+        data_set = reader.get_data()
+
+        self.assertVectorEquals(array([[11,12]]),data_set.var1)
+        self.assertVectorEquals(array([[0,1]]),data_set.var2)
+
 
 
     def test_qsim(self):

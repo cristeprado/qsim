@@ -1,4 +1,4 @@
-from numpy import array
+from numpy import *
 
 class DataReader(object):
 
@@ -39,9 +39,20 @@ class VerticalVectorReader(DataReader):
                 vectors[i]['values'].append(value)
 
         for vector in vectors:
-            setattr(out, vector['name'].strip(), array([vector['values']]))
+            setattr(out, vector['name'].strip(), array(vector['values'])[:,newaxis])
 
         return out
+
+class HorizontalVectorReader(DataReader):
+    def get_data(self):
+        out = DataSet()
+        for line in self.file_handler:
+            line_values=tuple(line.split(','))
+            var_name, var_value = line_values[0],line_values[1:]
+            var_value = map(float,var_value)
+            setattr(out, var_name, array(var_value)[newaxis,:])
+        return out
+
 
 
 class DataSet(object):
