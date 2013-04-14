@@ -50,7 +50,16 @@ class QSimTest(unittest.TestCase):
         self.assertVectorEquals(array([[11,12]]),data_set.var1)
         self.assertVectorEquals(array([[0,1]]),data_set.var2)
 
+    def test_read_matrix(self):
+        """A matrix file can be read and loaded into a
+        DataSet
 
+        """
+
+        reader = qsim.MatrixReader('test_data/matrix.txt')
+        data_set = reader.get_data()
+
+        self.assertVectorEquals(array([[10,20],[30,40]]),data_set.var1)
 
     def test_qsim(self):
         pass
