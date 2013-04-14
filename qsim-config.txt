@@ -1,2 +1,2 @@
-defaultModel,GqsR
+defaultModel,TestModel
 defaultData,D0
