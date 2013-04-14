@@ -114,10 +114,10 @@ class SimulationTest(BaseTest):
 
         self.assertVectorAlmostEqual(array([1,2]),array([1.01,2.01]),places=1)
         self.assertVectorAlmostEqual(array([[110],[330],[1100]]), self.sim.steps[1].H_h)
-        #self.assertVectorAlmostEqual(array([[-0.71327954],[-0.2596002 ],[ 0.64432307]]), self.sim.steps[1].b_h)
-        #self.assertVectorAlmostEqual(array([[ 311.63426866, 307.82930307, 307.82930307, 307.82930307, 304.87782213]]), self.sim.steps[1].S_vi)
+        self.assertVectorAlmostEqual(array([[-0.71327954],[-0.2596002 ],[ 0.64432307]]), self.sim.steps[1].b_h)
+        self.assertVectorAlmostEqual(array([[ 311.63426866, 307.82930307, 307.82930307, 307.82930307, 304.87782213]]), self.sim.steps[1].S_vi)
 
-        #self.assertVectorAlmostEqual(array([[ 0.07438614, 0.07116111, 0.07116111, 0.07116111, 0.06864085],[ 0.21935201, 0.21384719, 0.21384719, 0.21384719, 0.20944571],[ 0.70626185, 0.7149917,  0.7149917,  0.7149917,  0.72191344]]), self.sim.steps[1].P_h_vi)
+        self.assertVectorAlmostEqual(array([[ 0.07438614, 0.07116111, 0.07116111, 0.07116111, 0.06864085],[ 0.21935201, 0.21384719, 0.21384719, 0.21384719, 0.20944571],[ 0.70626185, 0.7149917,  0.7149917,  0.7149917,  0.72191344]]), self.sim.steps[1].P_h_vi)
 
 
         # qsim = Qsim(params, data, model)
