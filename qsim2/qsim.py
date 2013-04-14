@@ -53,6 +53,19 @@ class HorizontalVectorReader(DataReader):
             setattr(out, var_name, array(var_value)[newaxis,:])
         return out
 
+class MatrixReader(DataReader):
+    def get_data(self):
+        lines = self.file_handler.readlines()
+        var_value = []
+        out = DataSet()
+
+        var_name = lines[0].strip()
+
+        for line in lines[1:]:
+            var_value.append([float(x) for x in line.split(',')])
+
+        setattr(out,var_name,array(var_value))
+        return out
 
 class DataSet(object):
     pass

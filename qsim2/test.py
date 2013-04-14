@@ -1,6 +1,6 @@
 import unittest
 
-from qsim import SimulationStep, Simulation, \
+from qsim import SimulationStep, Simulation, MatrixReader, \
         ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
 from numpy import array
 
@@ -57,6 +57,16 @@ class ReaderTests(BaseTest):
         self.assertVectorEquals(array([[11,12]]),data_set.var1)
         self.assertVectorEquals(array([[0,1]]),data_set.var2)
 
+    def test_read_matrix(self):
+        """A matrix file can be read and loaded into a
+        DataSet
+
+        """
+
+        reader = MatrixReader('test_data/matrix.txt')
+        data_set = reader.get_data()
+
+        self.assertVectorEquals(array([[10,20],[30,40]]),data_set.var1)
 
 class SimulationTest(BaseTest):
 
@@ -66,6 +76,7 @@ class SimulationTest(BaseTest):
         self.params = ParameterSetReader('test_data/parameters.txt').get_data()
         self.locations_data = HorizontalVectorReader(
                'test_data/locations_data.txt').get_data()
+        self.prob_init = MatrixReader('test_data/prob.txt').get_data()
 
         self.sim = Simulation(
                self.params, self.households_data, None, self.locations_data, None)
@@ -76,10 +87,7 @@ class SimulationTest(BaseTest):
        self.assertEqual(self.params.T_MAX + 2, len(self.sim.steps))
        self.assertIsClass(self.sim.steps[1], SimulationStep)
 
-       print self.sim.steps[-1].b_h
        self.assertVectorEquals(self.households_data.b_h_m1, self.sim.steps[-1].b_h)
-
-
 
     def test_qsim(self):
         pass
