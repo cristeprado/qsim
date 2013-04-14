@@ -12,6 +12,10 @@ class BaseTest(unittest.TestCase):
         msg = "Vectors are not equal: \n %s \n\n vs \n\n %s " % (v1, v2)
         self.assertTrue((v1 == v2).all(), msg)
 
+    def assertVectorNotEqual(self, v1, v2):
+        msg = "Vectors are equal: \n %s \n\n vs \n\n %s " % (v1, v2)
+        self.assertFalse((v1 == v2).all(), msg)
+
     def assertVectorAlmostEqual(self,v1,v2,places=5):
         msg = "Vectors are not almost equal: \n %s \n\n vs \n\n %s " % (v1, v2)
         self.assertVectorEquals(around(v1,places),around(v2,places))
@@ -74,6 +78,34 @@ class ReaderTests(BaseTest):
 
         self.assertVectorEquals(array([[10,20],[30,40]]),data_set.var1)
 
+
+class SimulationStepTest(BaseTest):
+
+    def test_copy(self):
+        """A SimulationStep can be copied and the copy can be changed withchanging the original
+
+        """
+
+        step1 = SimulationStep(1,2)
+        step2 = step1.copy()
+
+        self.assertVectorEquals(step1.H_h, step2.H_h)
+        step2.H_h=step2.H_h*2
+        self.assertVectorNotEqual(step1.H_h, step2.H_h)
+
+        self.assertEquals(step1.I2, step2.I2)
+        step2.I2=step2.I2 + 1
+        self.assertNotEqual(step1.I2, step2.I2)
+
+        self.assertEquals(step1.converge, step2.converge)
+        step1.converge=True
+        step2.converge = False
+        self.assertNotEqual(step1.converge, step2.converge)
+
+        self.assertEquals(step1.iters, step2.iters)
+        step1.iters.append("2")
+        self.assertNotEqual(step1.iters, step2.iters)
+
 class SimulationTest(BaseTest):
 
     def setUp(self):
@@ -84,7 +116,7 @@ class SimulationTest(BaseTest):
                'test_data/locations_data.txt').get_data()
         self.probs_init = MatrixReader('test_data/data_P_h_vi_m1.txt').get_data()
 
-        self.model = TestModel(self.params)
+        self.model = TestModel(self.params, self.households_data, self.locations_data)
         self.sim = Simulation(
                self.params, self.households_data, self.probs_init, self.locations_data, self.model)
 
@@ -118,6 +150,8 @@ class SimulationTest(BaseTest):
         self.assertVectorAlmostEqual(array([[ 311.63426866, 307.82930307, 307.82930307, 307.82930307, 304.87782213]]), self.sim.steps[1].S_vi)
 
         self.assertVectorAlmostEqual(array([[ 0.07438614, 0.07116111, 0.07116111, 0.07116111, 0.06864085],[ 0.21935201, 0.21384719, 0.21384719, 0.21384719, 0.20944571],[ 0.70626185, 0.7149917,  0.7149917,  0.7149917,  0.72191344]]), self.sim.steps[1].P_h_vi)
+
+        self.assertTrue(self.sim.steps[1].converge)
 
 
         # qsim = Qsim(params, data, model)

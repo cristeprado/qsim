@@ -5,31 +5,31 @@ from numpy import newaxis, sqrt
 
 class Model(object):
 
-    def __init__(self, params):
+    def __init__(self, params, households_data, locations_data):
         self.params = params;
+        self.households_data = households_data
+        self.locations_data = locations_data
 
     def calc(self, dm, t):
         self.curr=dm[t-1].copy()
         if t==0:
             self.curr.S_vi=dm[t].S_vi.copy()
         self.curr.H_h=dm[t].H_h.copy()
-        self.curr.subsid_h=dm[t].subsid_h.copy()
-        self.curr.subsid_vi=dm[t].subsid_vi.copy()
-        #TODO: volver a esquema hardcopy_model_vars
+
         self.curr.converge=False
 
         self.curr.H_h_vi=self.calc_H_h_vi()
         self.curr.I_h_vi=self.calc_I_h_vi()
         self.curr.B_h_vi=self.calc_B_h_vi()
 
-        self.delta=100*dm.tol
-        #dm inicializa como converge=False
+        self.delta=100*self.params.tol
 
         list_iters=[self.curr]
-        while(self.cnt<dm.iter_max and not self.curr.converge):
+        cnt=0
+        while(cnt<self.params.iter_max and not self.curr.converge):
             #actualizacion
             self.old=self.curr
-            self.curr=self.old.copy()
+            self.curr=self.curr.copy()
 
             #calculos modelo
             self.curr.b_h_vi=self.calc_b_h_vi(dm,t)
@@ -46,12 +46,12 @@ class Model(object):
 
             print self.delta
             #actualiza contador
-            self.cnt+=1
+            cnt+=1
 
             #determina si hay convergencia
-            self.curr.converge=(self.delta<dm.tol)
+            self.curr.converge=(self.delta<self.params.tol)
 
-            print "t=",t,", iteración",self.cnt,", converge?:",self.curr.converge
+            print "t=",t,", iteración",cnt,", converge?:",self.curr.converge
 
             self.curr.H_h_vi=self.calc_H_h_vi()
             self.curr.I_h_vi=self.calc_I_h_vi()
@@ -61,9 +61,13 @@ class Model(object):
 
             list_iters.append(self.curr)
 
-        self.curr.iters_count=self.cnt
+        self.curr.iters_count=cnt
         self.curr.iters=list_iters
-        dm[t]=self.curr
+        dm[t]=self.curr.copy()
+
+    def calc_delta(self):
+        delta=sqrt(sum((self.curr.b_h-self.old.b_h)**2)+((self.curr.P_h_vi-self.old.P_h_vi)**2).sum())
+        return(delta)
 
     def calc_b_h(self,dm,t):
         raise Exception("Not implemented")
@@ -99,11 +103,11 @@ class Model(object):
         return B_h_vi
 
     def calc_I2(self,dm):
-        avgZ_city = (self.params.Z_h*self.curr.H_h_vi).sum()/self.curr.H_h_vi.sum()
-        avgZ_zone = (self.params.Z_h*self.curr.H_h_vi).sum(axis=0)[newaxis,:]/self.curr.H_h_vi.sum(axis=0)[newaxis,:]
+        avgZ_city = (self.households_data.Z_h*self.curr.H_h_vi).sum()/self.curr.H_h_vi.sum()
+        avgZ_zone = (self.households_data.Z_h*self.curr.H_h_vi).sum(axis=0)[newaxis,:]/self.curr.H_h_vi.sum(axis=0)[newaxis,:]
         I2 = sqrt(((avgZ_city-avgZ_zone)**2).sum())
         return I2
 
     def calc_avgZ_vi(self,dm):
-        avgZ_zone = (self.params.Z_h*self.curr.H_h_vi).sum(axis=0)[newaxis,:]/self.curr.H_h_vi.sum(axis=0)[newaxis,:]
+        avgZ_zone = (self.households_data.Z_h*self.curr.H_h_vi).sum(axis=0)[newaxis,:]/self.curr.H_h_vi.sum(axis=0)[newaxis,:]
         return avgZ_zone

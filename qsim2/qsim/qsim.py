@@ -1,4 +1,5 @@
 from numpy import empty, zeros, ones
+from copy import deepcopy
 
 class SimulationStep(object):
 
@@ -20,6 +21,9 @@ class SimulationStep(object):
         self.converge = False
         self.iters = []
         self.iters_count = 0
+
+    def copy(self):
+        return deepcopy(self)
 
 
 class Simulation(object):
@@ -55,4 +59,5 @@ class Simulation(object):
             self.steps[t].H_h = self.households_data.H_h_0 * factor
 
     def run(self):
-        pass
+        for t in range(self.params.T_MAX):
+            self.model.calc(self.steps,t)

@@ -7,11 +7,11 @@ from model import Model as BaseModel
 
 class Model(BaseModel):
 
-    def __init__(self, params):
-        BaseModel.__init__(self, params)
+    def __init__(self, params, households_data, locations_data):
+        BaseModel.__init__(self, params, households_data, locations_data)
 
     def calc_b_h_vi(self,dm,t):
-        return self.params.alpha_h*(self.params.Z_h*dm[t-1].P_h_vi).sum(axis=0)[newaxis,:]
+        return self.households_data.alpha_h*(self.households_data.Z_h*dm[t-1].P_h_vi).sum(axis=0)[newaxis,:]
 
     def calc_b_h(self,dm,t):
         print dm[t-1].S_vi
@@ -35,5 +35,5 @@ class Model(BaseModel):
         return(S_vi)
 
     def calc_gamma_vi(self,dm,t):
-        gamma_vi=(self.curr.S_vi>self.params.R_vi)*(1/self.params.lambd)*log(((sum(dm[t].H_h))/self.params.R_vi)*(exp(self.params.lambd*(self.curr.r_vi))/(exp(self.params.lambd*(self.curr.r_vi-dm[t-1].gamma_vi))).sum(axis=1)[:,newaxis]))
+        gamma_vi=(self.curr.S_vi>self.locations_data.R_vi)*(1/self.params.lambd)*log(((sum(dm[t].H_h))/self.locations_data.R_vi)*(exp(self.params.lambd*(self.curr.r_vi))/(exp(self.params.lambd*(self.curr.r_vi-dm[t-1].gamma_vi))).sum(axis=1)[:,newaxis]))
         return(gamma_vi)
