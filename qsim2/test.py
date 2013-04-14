@@ -2,7 +2,7 @@ import unittest
 
 from qsim import SimulationStep, Simulation, MatrixReader, \
         ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
-from numpy import array
+from numpy import array, zeros
 
 
 class BaseTest(unittest.TestCase):
@@ -32,6 +32,7 @@ class ReaderTests(BaseTest):
         self.assertEquals(100, parameterSet.iter_max)
         self.assertEquals(1e-10, parameterSet.tol)
         self.assertEquals(0.99, parameterSet.nu)
+        self.assertEquals(0.1, parameterSet.pop_growth_rate)
 
     def test_read_vertical_vector(self):
         """A vertical vector file can be read and loaded into a
@@ -76,18 +77,34 @@ class SimulationTest(BaseTest):
         self.params = ParameterSetReader('test_data/parameters.txt').get_data()
         self.locations_data = HorizontalVectorReader(
                'test_data/locations_data.txt').get_data()
-        self.prob_init = MatrixReader('test_data/prob.txt').get_data()
+        self.probs_init = MatrixReader('test_data/data_P_h_vi_m1.txt').get_data()
 
         self.sim = Simulation(
-               self.params, self.households_data, None, self.locations_data, None)
+               self.params, self.households_data, self.probs_init, self.locations_data, None)
+
+    def test_data_validate(self):
+        aux=self.locations_data.R_vi
+        self.locations_data.R_vi=zeros((1,len(self.locations_data.S_vi_0)))
+        self.assertRaises(ValueError,self.sim.data_validate)
+        self.locations_data.R_vi=aux
 
     def test_init_steps(self):
-       """It initializes all the simulation steps."""
+        """It initializes all the simulation steps."""
 
-       self.assertEqual(self.params.T_MAX + 2, len(self.sim.steps))
-       self.assertIsClass(self.sim.steps[1], SimulationStep)
+        self.assertEqual(self.params.T_MAX + 2, len(self.sim.steps))
+        self.assertIsClass(self.sim.steps[1], SimulationStep)
 
-       self.assertVectorEquals(self.households_data.b_h_m1, self.sim.steps[-1].b_h)
+        self.assertVectorEquals(self.households_data.b_h_m1, self.sim.steps[-1].b_h)
+
+        self.assertVectorEquals(self.probs_init.P_h_vi_m1,self.sim.steps[-1].P_h_vi)
+
+        self.assertVectorEquals(self.locations_data.gamma_vi_0,self.sim.steps[0].gamma_vi)
+
+        self.assertVectorEquals(self.locations_data.S_vi_0,self.sim.steps[0].S_vi)
+
+        for t in range(-2,self.params.T_MAX):
+            self.assertVectorEquals(self.sim.steps[t].H_h,self.households_data.H_h_0*(1.1**t))
+
 
     def test_qsim(self):
         pass

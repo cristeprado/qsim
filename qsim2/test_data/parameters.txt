@@ -5,3 +5,4 @@ iter_max,100
 tol,1e-10
 w,100
 nu,0.99
+pop_growth_rate,0.1

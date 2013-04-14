@@ -106,6 +106,8 @@ class Simulation(object):
             self.locations_data = locations_data
             self.model = model
 
+            self.data_validate()
+
             self.init_steps()
 
 
@@ -113,7 +115,19 @@ class Simulation(object):
         return SimulationStep(
                 len(self.households_data.H_h_0), len(self.locations_data.S_vi_0))
 
+    def data_validate(self):
+        for i in range(len(self.locations_data.S_vi_0)):
+            if (self.locations_data.S_vi_0>self.locations_data.R_vi).any():
+                raise ValueError
+
     def init_steps(self):
-        self.steps = [self.make_step() for t in range(0, params.T_MAX + 2)]
+        self.steps = [self.make_step() for t in range(0, self.params.T_MAX + 2)]
+        self.steps[-1].b_h=self.households_data.b_h_m1
+        self.steps[-1].P_h_vi=self.probs_init.P_h_vi_m1
+        self.steps[0].gamma_vi=self.locations_data.gamma_vi_0
+        self.steps[0].S_vi=self.locations_data.S_vi_0
+
+        for t in range(-2,self.params.T_MAX):
+            self.steps[t].H_h=self.households_data.H_h_0*((1+self.params.pop_growth_rate)**t)
 
 
