@@ -1,21 +1,28 @@
 import unittest
 
-import qsim
+from qsim import SimulationStep, Simulation, \
+        ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
 from numpy import array
 
 
-class QSimTest(unittest.TestCase):
+class BaseTest(unittest.TestCase):
 
     def assertVectorEquals(self, v1, v2):
-        self.assertTrue((v1 == v2).all())
+        msg = "Vectors are not equal: \n %s \n\n vs \n\n %s " % (v1, v2)
+        self.assertTrue((v1 == v2).all(), msg)
 
+    def assertIsClass(self, var, a_class):
+        self.assertTrue(var.__class__ == a_class)
+
+
+class ReaderTests(BaseTest):
 
     def test_read_parameters(self):
         """A parameters file can be read and loaded into a ParameterSet
         object.
 
         """
-        reader = qsim.ParameterSetReader('test_data/parameters.txt')
+        reader = ParameterSetReader('test_data/parameters.txt')
         parameterSet = reader.get_data()
 
         self.assertEquals(int, type(parameterSet.T_MAX))
@@ -31,7 +38,7 @@ class QSimTest(unittest.TestCase):
         DataSet.
 
         """
-        reader = qsim.VerticalVectorReader('test_data/vertical.txt')
+        reader = VerticalVectorReader('test_data/vertical.txt')
         data_set = reader.get_data()
 
         self.assertVectorEquals(array([0,1,2]), array([0,1,2]))
@@ -44,11 +51,33 @@ class QSimTest(unittest.TestCase):
 
         """
 
-        reader = qsim.HorizontalVectorReader('test_data/horizontal.txt')
+        reader = HorizontalVectorReader('test_data/horizontal.txt')
         data_set = reader.get_data()
 
         self.assertVectorEquals(array([[11,12]]),data_set.var1)
         self.assertVectorEquals(array([[0,1]]),data_set.var2)
+
+
+class SimulationTest(BaseTest):
+
+    def setUp(self):
+        self.households_data = VerticalVectorReader(
+               'test_data/households_data.txt').get_data()
+        self.params = ParameterSetReader('test_data/parameters.txt').get_data()
+        self.locations_data = HorizontalVectorReader(
+               'test_data/locations_data.txt').get_data()
+
+        self.sim = Simulation(
+               self.params, self.households_data, None, self.locations_data, None)
+
+    def test_init_steps(self):
+       """It initializes all the simulation steps."""
+
+       self.assertEqual(self.params.T_MAX + 2, len(self.sim.steps))
+       self.assertIsClass(self.sim.steps[1], SimulationStep)
+
+       print self.sim.steps[-1].b_h
+       self.assertVectorEquals(self.households_data.b_h_m1, self.sim.steps[-1].b_h)
 
 
 
