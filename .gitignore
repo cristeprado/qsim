@@ -2,6 +2,7 @@
 *.dat
 *.swp
 *.*~
+qsim2/output/*
 output/*
 Output/*
 .DS_Store
