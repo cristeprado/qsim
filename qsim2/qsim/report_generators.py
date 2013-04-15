@@ -23,7 +23,7 @@ class ReportGenerator(object):
 
     def generate_variable_reports(self):
         for var in self.varname_list:
-            output_file_name = "log_{}.txt".format(var)
+            output_file_name = "report_{}.txt".format(var)
             output_file_path = normpath(join(self.output_folder, output_file_name))
 
             with open(output_file_path,'w') as ff:
@@ -36,7 +36,7 @@ class ReportGenerator(object):
     def generate_step_reports(self):
 
         for t in range(self.sim.params.T_MAX):
-            output_file_name = "iters_t{}.txt".format(t)
+            output_file_name = "report_iters_t{}.txt".format(t)
             output_file_path = normpath(join(self.output_folder, output_file_name))
 
             with open(output_file_path,'w') as ff:

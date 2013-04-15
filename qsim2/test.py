@@ -4,6 +4,7 @@ from qsim import SimulationStep, Simulation, MatrixReader, \
         ParameterSetReader, VerticalVectorReader, HorizontalVectorReader, ReportGenerator
 from qsim.models.GqsR import Model as TestModel
 from numpy import array, zeros, around
+from os.path import exists, normpath
 
 
 class BaseTest(unittest.TestCase):
@@ -23,6 +24,9 @@ class BaseTest(unittest.TestCase):
     def assertIsClass(self, var, a_class):
         self.assertTrue(var.__class__ == a_class)
 
+    def assertPathExists(self, path):
+        msg = "File does not exist: %s" % (path)
+        self.assertTrue(exists(normpath(path)),msg)
 
 class ReaderTests(BaseTest):
 
@@ -182,8 +186,11 @@ class ReportGeneratorTest(BaseTest):
         self.sim.run()
         repgen = ReportGenerator(self.sim,"output")
         repgen.generate_variable_reports()
+        self.assertPathExists("output/report_H_h_vi.txt")
         repgen.generate_step_reports()
+        self.assertPathExists("output/report_iters_t0.txt")
         repgen.store_results()
+        self.assertPathExists("output/data.pkl")
 
 if __name__ == '__main__':
     unittest.main()
