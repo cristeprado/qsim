@@ -1,11 +1,5 @@
 from numpy import empty, zeros, ones
 from copy import deepcopy
-from os import makedirs
-from os.path import exists, normpath, relpath, join
-try:
-   import cPickle as pickle
-except:
-   import pickle
 
 class SimulationStep(object):
 
@@ -54,35 +48,4 @@ class Simulation(object):
     def run(self):
         for t in range(self.params.T_MAX):
             self.model.calc(self.steps,t)
-
-    def get_output_folder(self):
-        output_folder = "output"
-        output_folder = normpath(relpath(output_folder))
-        if not exists(output_folder):
-            makedirs(output_folder)
-        return output_folder
-
-    def generate_reports(self):
-        varname_list = self.steps[1].__dict__.keys()
-
-        for x in varname_list:
-            output_file_name = "log_{}.txt".format(x)
-            output_file_path = normpath(join(self.get_output_folder(), output_file_name))
-
-            with open(output_file_path,'w') as ff:
-                ff.write(x)
-                for t in range(-2,self.params.T_MAX):
-                    ff.write("\nt = {}\n".format(t))
-                    try:
-                        value = getattr(self.steps[t],x)
-                    except AttributeError:
-                        value = "-"
-                    ff.write("{}\n".format(value))
-
-    def store_results(self):
-        output_file_name = "data.pkl"
-        output_file_path = normpath(join(self.get_output_folder(), output_file_name))
-
-        with open(output_file_path,'w') as ff:
-            pickle.dump(self,ff)
 

@@ -34,14 +34,13 @@ class Model(object):
             #calculo error
             delta=self.calc_delta()
 
-            print delta
             #actualiza contador
             cnt+=1
 
             #determina si hay convergencia
             self.curr.converge=(delta<self.params.tol)
 
-            print "t=",t,", iteración",cnt,", converge?:",self.curr.converge
+            print "t=",t,", iter",cnt,", converges?:",self.curr.converge
 
             self.curr.H_h_vi=self.calc_H_h_vi()
             self.curr.I_h_vi=self.calc_I_h_vi()
@@ -56,7 +55,7 @@ class Model(object):
         dm[t]=self.curr.copy()
 
     def calc_delta(self):
-        return sqrt(sum((self.curr.b_h-self.old.b_h)**2)+((self.curr.P_h_vi-self.old.P_h_vi)**2).sum())
+        return sqrt(sum((self.curr.b_h-self.old.b_h)**2)+((self.curr.P_h_vi-self.old.P_h_vi)**2).sum())[0]
 
     def calc_b_h(self,dm,t):
         raise Exception("Not implemented")

@@ -14,14 +14,11 @@ class Model(BaseModel):
         return self.households_data.alpha_h*(self.households_data.Z_h*dm[t-1].P_h_vi).sum(axis=0)[newaxis,:]
 
     def calc_b_h(self,dm,t):
-        print dm[t-1].S_vi
         b_h=(-1/self.params.mu)*(log(( dm[t-1].S_vi*exp(self.params.mu*self.curr.b_h_vi)/(dm[t].H_h*exp(self.params.mu*(dm[t-1].b_h+self.curr.b_h_vi))).sum(axis=0)[newaxis,:]).sum(axis=1)[:,newaxis]))
 
         return(b_h)
 
     def calc_P_h_vi(self,dm,t):
-        print self.curr.b_h
-        print self.curr.b_h_vi
         P_h_vi=(dm[t].H_h*exp(self.params.mu*(self.curr.b_h+self.curr.b_h_vi))/
                 ((dm[t].H_h*exp(self.params.mu*(self.curr.b_h+self.curr.b_h_vi))).sum(axis=0)[newaxis,:]))
         return(P_h_vi)

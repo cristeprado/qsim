@@ -1,7 +1,7 @@
 import unittest
 
 from qsim import SimulationStep, Simulation, MatrixReader, \
-        ParameterSetReader, VerticalVectorReader, HorizontalVectorReader
+        ParameterSetReader, VerticalVectorReader, HorizontalVectorReader, ReportGenerator
 from qsim.models.GqsR import Model as TestModel
 from numpy import array, zeros, around
 
@@ -38,7 +38,6 @@ class ReaderTests(BaseTest):
         self.assertEquals(2, parameterSet.T_MAX)
         self.assertEquals(0.5, parameterSet.mu)
         self.assertEquals(0.5, parameterSet.lambd)
-        #self.assertEquals(100, parameterSet.iter_max)
         self.assertEquals(1e-10, parameterSet.tol)
         self.assertEquals(0.99, parameterSet.nu)
         self.assertEquals(0.1, parameterSet.pop_growth_rate)
@@ -164,13 +163,27 @@ class SimulationTest(BaseTest):
         # qsim = Qsim(params, data, model)
         # qsim.run()
 
+
+class ReportGeneratorTest(BaseTest):
+
+    def setUp(self):
+        self.households_data = VerticalVectorReader(
+               'test_data/households_data.txt').get_data()
+        self.params = ParameterSetReader('test_data/parameters.txt').get_data()
+        self.locations_data = HorizontalVectorReader(
+               'test_data/locations_data.txt').get_data()
+        self.probs_init = MatrixReader('test_data/data_P_h_vi_m1.txt').get_data()
+
+        self.model = TestModel(self.params, self.households_data, self.locations_data)
+        self.sim = Simulation(
+               self.params, self.households_data, self.probs_init, self.locations_data, self.model)
+
     def test_generate_reports(self):
         self.sim.run()
-        self.sim.generate_reports()
-
-    def test_store_results(self):
-        self.sim.run()
-        self.sim.store_results()
+        repgen = ReportGenerator(self.sim,"output")
+        repgen.generate_variable_reports()
+        repgen.generate_step_reports()
+        repgen.store_results()
 
 if __name__ == '__main__':
     unittest.main()
