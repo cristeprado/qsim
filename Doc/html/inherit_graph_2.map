@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classmodel__template_1_1_model_template.html" title="model_template.ModelTemplate" alt="" coords="6,132,213,159"/>
-<area shape="rect" id="node2" href="$class_models_1_1_g0s_1_1_model.html" title="Models.G0s.Model" alt="" coords="277,5,408,32"/>
-<area shape="rect" id="node3" href="$class_models_1_1_g0s_r_1_1_model.html" title="Models.G0sR.Model" alt="" coords="273,56,413,83"/>
-<area shape="rect" id="node4" href="$class_models_1_1_g0s_rcon_1_1_model.html" title="Models.G0sRcon.Model" alt="" coords="262,107,423,133"/>
-<area shape="rect" id="node5" href="$class_models_1_1_gqs_r2_1_1_model.html" title="Models.GqsR2.Model" alt="" coords="269,157,416,184"/>
-<area shape="rect" id="node6" href="$class_models_1_1_gqs_r_1_1_model.html" title="Models.GqsR.Model" alt="" coords="273,208,413,235"/>
-<area shape="rect" id="node7" href="$class_models_1_1_gqs_rcon_1_1_model.html" title="Models.GqsRcon.Model" alt="" coords="262,259,423,285"/>
-</map>

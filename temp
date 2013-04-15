@@ -1,9 +1,0 @@
-    @property
-    def iters_count(self):
-        return self.var_dict["iters_count"]
-
-    @iters_count.setter
-    def iters_count(self,value):
-        self.var_dict["iters_count"]=value
-
-
