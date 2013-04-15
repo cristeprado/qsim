@@ -12,23 +12,16 @@ class SimulationStep(object):
 
 class Simulation(object):
 
-    def __init__(self, params, households_data, locations_data, probs_init, model):
+    def __init__(self, params, households_data, locations_data, probs_init, model, sim_name="sim"):
             self.params = params
             self.households_data = households_data
             self.probs_init = probs_init
             self.locations_data = locations_data
             self.model = model
-            self.data_name = ""
-            self.model_name = ""
+            self.sim_name = sim_name
 
             self.data_validate()
             self.init_steps()
-
-    def set_data_name(self, name):
-        self.data_name = name
-
-    def set_model_name(self, name):
-        self.model_name = name
 
     def make_step(self):
         return SimulationStep(

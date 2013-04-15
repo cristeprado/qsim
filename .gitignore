@@ -5,4 +5,7 @@
 output/*
 Output/*
 old/*
+doc/*
+Doc/*
+Doxyfile
 .DS_Store

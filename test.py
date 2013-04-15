@@ -204,11 +204,9 @@ class PlotterTest(BaseTest):
 
         self.model = TestModel(self.params, self.households_data, self.locations_data)
         self.sim = Simulation(
-               self.params, self.households_data, self.locations_data, self.probs_init, self.model)
+               self.params, self.households_data, self.locations_data, self.probs_init, self.model, "test_sim")
 
     def test_plot(self):
-        self.sim.set_data_name("test_data")
-        self.sim.set_model_name("test_model")
         self.sim.run()
         plotter = Plotter(self.sim)
         plotter.plot()

@@ -9,7 +9,7 @@ class ReportGenerator(object):
 
     def __init__(self, sim, output_folder):
         self.sim=sim
-        self.output_folder = normpath(relpath(output_folder))
+        self.output_folder = normpath(join(relpath(output_folder), sim.sim_name))
         if not exists(self.output_folder):
             makedirs(self.output_folder)
         self.varname_list = self.sim.steps[0].__dict__.keys()

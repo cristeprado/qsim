@@ -74,7 +74,7 @@ class Plotter(object):
         radio_labels=['H_h_vi', 'I_h_vi','P_h_vi','b_h_vi','B_h_vi','avgZ_vi','H_h','b_h', 'r_vi', 'S_vi']
         rax = plt.axes([0.025, 0.4, 0.17, 0.05*len(radio_labels)], axisbg=axcolor)
 
-        plt.title(self.sim.model_name+"-"+self.sim.data_name)
+        plt.title(self.sim.sim_name)
         stime = Slider(axtime, 'Time', 0, self.sim.params.T_MAX-1,valfmt='%1.0f', valinit=0)
 
         last_iter=max([self.dm[x].iters_count for x in range(self.sim.params.T_MAX)])
