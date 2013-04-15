@@ -1,0 +1,12 @@
+converge
+t = -2
+-
+
+t = -1
+-
+
+t = 0
+[ True]
+
+t = 1
+[ True]

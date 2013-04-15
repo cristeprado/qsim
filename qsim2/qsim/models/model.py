@@ -12,19 +12,10 @@ class Model(object):
 
     def calc(self, dm, t):
         self.curr=dm[t-1].copy()
-        if t==0:
-            self.curr.S_vi=dm[t].S_vi.copy()
         self.curr.H_h=dm[t].H_h.copy()
-
         self.curr.converge=False
 
-        self.curr.H_h_vi=self.calc_H_h_vi()
-        self.curr.I_h_vi=self.calc_I_h_vi()
-        self.curr.B_h_vi=self.calc_B_h_vi()
-
-        self.delta=100*self.params.tol
-
-        list_iters=[self.curr]
+        list_iters=[dm[t-1]]
         cnt=0
         while(cnt<self.params.iter_max and not self.curr.converge):
             #actualizacion
@@ -33,7 +24,6 @@ class Model(object):
 
             #calculos modelo
             self.curr.b_h_vi=self.calc_b_h_vi(dm,t)
-            self.curr.phi_hvi=self.calc_phi_hvi(dm,t)
             self.curr.b_h=self.calc_b_h(dm,t)
 
             self.curr.P_h_vi=self.calc_P_h_vi(dm,t)
@@ -42,14 +32,14 @@ class Model(object):
             self.curr.gamma_vi=self.calc_gamma_vi(dm,t)
 
             #calculo error
-            self.delta=self.calc_delta()
+            delta=self.calc_delta()
 
-            print self.delta
+            print delta
             #actualiza contador
             cnt+=1
 
             #determina si hay convergencia
-            self.curr.converge=(self.delta<self.params.tol)
+            self.curr.converge=(delta<self.params.tol)
 
             print "t=",t,", iteración",cnt,", converge?:",self.curr.converge
 
@@ -66,8 +56,7 @@ class Model(object):
         dm[t]=self.curr.copy()
 
     def calc_delta(self):
-        delta=sqrt(sum((self.curr.b_h-self.old.b_h)**2)+((self.curr.P_h_vi-self.old.P_h_vi)**2).sum())
-        return(delta)
+        return sqrt(sum((self.curr.b_h-self.old.b_h)**2)+((self.curr.P_h_vi-self.old.P_h_vi)**2).sum())
 
     def calc_b_h(self,dm,t):
         raise Exception("Not implemented")
@@ -86,9 +75,6 @@ class Model(object):
 
     def calc_gamma_vi(self,dm,t):
         return(dm[t].gamma_vi)
-
-    def calc_phi_hvi(self,dm,t):
-        return(dm[t].phi_h_vi)
 
     def calc_H_h_vi(self):
         H_h_vi = self.curr.H_h_vi=self.curr.S_vi*self.curr.P_h_vi

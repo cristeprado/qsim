@@ -87,6 +87,11 @@ class SimulationStepTest(BaseTest):
         """
 
         step1 = SimulationStep(1,2)
+        step1.H_h=array([[1],[2]])
+        step1.I2=1
+        step1.converge=True
+        step1.iters=[1]
+
         step2 = step1.copy()
 
         self.assertVectorEquals(step1.H_h, step2.H_h)
@@ -98,7 +103,6 @@ class SimulationStepTest(BaseTest):
         self.assertNotEqual(step1.I2, step2.I2)
 
         self.assertEquals(step1.converge, step2.converge)
-        step1.converge=True
         step2.converge = False
         self.assertNotEqual(step1.converge, step2.converge)
 
@@ -140,7 +144,6 @@ class SimulationTest(BaseTest):
         for t in range(-2,self.params.T_MAX):
             self.assertVectorEquals(self.sim.steps[t].H_h,self.households_data.H_h_0*(1.1**t))
 
-
     def test_run(self):
         self.sim.run()
 
@@ -151,14 +154,25 @@ class SimulationTest(BaseTest):
 
         self.assertVectorAlmostEqual(array([[ 0.07438614, 0.07116111, 0.07116111, 0.07116111, 0.06864085],[ 0.21935201, 0.21384719, 0.21384719, 0.21384719, 0.20944571],[ 0.70626185, 0.7149917,  0.7149917,  0.7149917,  0.72191344]]), self.sim.steps[1].P_h_vi)
 
+        self.assertVectorAlmostEqual(array([[ 313.23282938, 277.7167271, 277.7167271, 277.7167271, 253.61698931]]), self.sim.steps[0].S_vi)
+
+        self.assertVectorAlmostEqual(array([[ 311.63426866, 307.82930307, 307.82930307, 307.82930307, 304.87782213]]), self.sim.steps[1].S_vi)
+
         self.assertTrue(self.sim.steps[1].converge)
 
 
         # qsim = Qsim(params, data, model)
         # qsim.run()
 
+    def test_generate_reports(self):
+        self.sim.run()
+        self.sim.generate_reports()
 
+    def test_store_results(self):
+        self.sim.run()
+        self.sim.store_results()
 
 if __name__ == '__main__':
     unittest.main()
+
 
