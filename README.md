@@ -8,7 +8,7 @@ QSim receives data in text files (folder "data") and uses on of the models pre-p
 to run a simulation of the developement of a city. The output can be printed as text and viewed with a plot tool
 (for small cities)
 
-New models can be easilly programmed using the older ones as an exemple (a little knwoledge of numpy syntax is needed).
+New models can be easily programmed using the older ones as an exemple (a little knwoledge of numpy syntax is needed).
 
 - How to use it?
 A working example in found in the "example.py" file.
